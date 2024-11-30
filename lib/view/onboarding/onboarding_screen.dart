@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
@@ -34,31 +35,36 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    return Obx(() {
-      return Column(
-        children: [
-          // 페이지네이션 바
-          _buildPaginationIndicator(viewModel.currentPageIndex),
-          const SizedBox(height: 24),
-          // PageView로 컨텐츠 렌더링
-          Expanded(
-            child: PageView(
-              controller: viewModel.pageController, // PageController 연결
-              onPageChanged: (index) {
-                viewModel.currentPageIndex = index; // ViewModel과 동기화
-              },
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                _buildNameInputStep(),
-                _buildBirthInputStep(),
-                _buildGenderSelectionStep(),
-                _buildMotivateInputStep(),
-              ],
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Obx(() {
+        return Column(
+          children: [
+            // 페이지네이션 바
+            _buildPaginationIndicator(viewModel.currentPageIndex),
+            const SizedBox(height: 24),
+            // PageView로 컨텐츠 렌더링
+            Expanded(
+              child: PageView(
+                controller: viewModel.pageController, // PageController 연결
+                onPageChanged: (index) {
+                  viewModel.currentPageIndex = index; // ViewModel과 동기화
+                },
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  _buildNameInputStep(),
+                  _buildBirthInputStep(),
+                  _buildGenderSelectionStep(),
+                  _buildMotivateInputStep(),
+                ],
+              ),
             ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      }),
+    );
   }
 
   Widget _buildPaginationIndicator(int step) {
@@ -75,112 +81,122 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
 
   Widget _buildNameInputStep() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildTitle('안녕하세요!\n당신의 이름을 알려주세요'),
-        _buildLabel('이름'),
-        TextField(
-          cursorHeight: 20,
-          controller: viewModel.textController,
-          style: FontSystem.KR16M,
-          decoration: InputDecoration(
-            hintText: "이름을 입력해주세요.",
-            hintStyle:
-                FontSystem.KR16B.copyWith(color: ColorSystem.grey.shade600),
-            filled: true,
-            fillColor: viewModel.textController.text.isNotEmpty
-                ? ColorSystem.lightBlue
-                : Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(
-                color: Color(0xFFE5E5EC),
-                width: 1.0,
-              ),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTitle('안녕하세요!\n당신의 이름을 알려주세요'),
+                _buildLabel('이름'),
+                TextField(
+                  cursorHeight: 20,
+                  controller: viewModel.textController,
+                  style: FontSystem.KR16SB,
+                  decoration: InputDecoration(
+                    hintText: "이름을 입력해주세요.",
+                    hintStyle: FontSystem.KR16M
+                        .copyWith(color: ColorSystem.grey.shade600),
+                    filled: true,
+                    fillColor: viewModel.textController.text.isNotEmpty
+                        ? ColorSystem.lightBlue
+                        : Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE5E5EC),
+                        width: 1.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE5E5EC), // 활성 상태 테두리 색상
+                        width: 1.0, // 테두리 두께
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: ColorSystem.Blue, // 포커스 상태 테두리 색상 (예: 파란색)
+                        width: 1.0, // 포커스 상태 테두리 두께
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                _buildLabel('영문 이름'),
+                TextField(
+                  cursorHeight: 20,
+                  controller: viewModel.textEnController,
+                  style: FontSystem.KR16SB,
+                  decoration: InputDecoration(
+                    hintText: "영문 이름을 입력해주세요.",
+                    hintStyle: FontSystem.KR16M
+                        .copyWith(color: ColorSystem.grey.shade600),
+                    filled: true,
+                    fillColor: viewModel.textEnController.text.isNotEmpty
+                        ? ColorSystem.lightBlue
+                        : Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE5E5EC),
+                        width: 1.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE5E5EC), // 활성 상태 테두리 색상
+                        width: 1.0, // 테두리 두께
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(
+                        color: ColorSystem.Blue, // 포커스 상태 테두리 색상 (예: 파란색)
+                        width: 1.0, // 포커스 상태 테두리 두께
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(
-                color: Color(0xFFE5E5EC), // 활성 상태 테두리 색상
-                width: 1.0, // 테두리 두께
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(
-                color: ColorSystem.Blue, // 포커스 상태 테두리 색상 (예: 파란색)
-                width: 1.0, // 포커스 상태 테두리 두께
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 32,
-        ),
-        _buildLabel('영문 이름'),
-        TextField(
-          cursorHeight: 20,
-          controller: viewModel.textEnController,
-          style: FontSystem.KR16M,
-          decoration: InputDecoration(
-            hintText: "영문 이름을 입력해주세요.",
-            hintStyle:
-                FontSystem.KR16B.copyWith(color: ColorSystem.grey.shade600),
-            filled: true,
-            fillColor: viewModel.textEnController.text.isNotEmpty
-                ? ColorSystem.lightBlue
-                : Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(
-                color: Color(0xFFE5E5EC),
-                width: 1.0,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(
-                color: Color(0xFFE5E5EC), // 활성 상태 테두리 색상
-                width: 1.0, // 테두리 두께
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(
-                color: ColorSystem.Blue, // 포커스 상태 테두리 색상 (예: 파란색)
-                width: 1.0, // 포커스 상태 테두리 두께
-              ),
-            ),
-          ),
-        ),
-        const Spacer(),
-        Container(
-            width: double.infinity,
-            height: 60,
-            decoration: BoxDecoration(
-              color: viewModel.isNameButtonEnabled
-                  ? ColorSystem.blue.shade500
-                  : ColorSystem.grey.shade200,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: RoundedRectangleTextButton(
-              text: '완료',
-              textStyle: FontSystem.KR16B.copyWith(
-                color: viewModel.isNameButtonEnabled
-                    ? ColorSystem.white
-                    : ColorSystem.grey.shade400,
-              ),
-              padding: viewModel.isNameButtonEnabled
-                  ? const EdgeInsets.symmetric(vertical: 16)
-                  : const EdgeInsets.symmetric(vertical: 2),
-              onPressed: viewModel.isNameButtonEnabled
-                  ? () {
-                      viewModel.goToNextStep();
-                    }
-                  : null,
-            ))
-      ]),
-    );
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                  width: double.infinity,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: viewModel.isNameButtonEnabled
+                        ? ColorSystem.blue.shade500
+                        : ColorSystem.grey.shade200,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: RoundedRectangleTextButton(
+                    text: '완료',
+                    textStyle: FontSystem.KR16B.copyWith(
+                      color: viewModel.isNameButtonEnabled
+                          ? ColorSystem.white
+                          : ColorSystem.grey.shade400,
+                    ),
+                    padding: viewModel.isNameButtonEnabled
+                        ? const EdgeInsets.symmetric(vertical: 16)
+                        : const EdgeInsets.symmetric(vertical: 2),
+                    onPressed: viewModel.isNameButtonEnabled
+                        ? () {
+                            viewModel.goToNextStep();
+                          }
+                        : null,
+                  )),
+            )
+          ],
+        ));
   }
 
   Widget _buildTitle(String text) {
@@ -188,9 +204,9 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
       children: [
         Text(
           text,
-          style: FontSystem.KR24B,
+          style: FontSystem.KR28B,
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 42),
       ],
     );
   }
@@ -202,7 +218,7 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
           label,
           style: FontSystem.KR14R,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
       ],
     );
   }
@@ -213,19 +229,20 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildTitle('생년월일을\n입력해 주세요.'),
         _buildLabel('생년월일'),
-        const SizedBox(
-          height: 12,
-        ),
         TextField(
+          keyboardType: TextInputType.number,
           cursorHeight: 20,
           controller: viewModel.textBirthController,
-          style: FontSystem.KR16M,
+          style: FontSystem.KR16SB,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(10),
+            DateInputFormatter(),
+          ],
           decoration: InputDecoration(
-            hintText: "YYYY.MM.DD",
-            hintStyle: const TextStyle(
-              color: Color(0xFF999999),
-              fontSize: 16,
-            ),
+            hintText: "YYYY-MM-DD",
+            hintStyle:
+                FontSystem.KR16M.copyWith(color: ColorSystem.grey.shade600),
             filled: true,
             fillColor: viewModel.textBirthController.text.isNotEmpty
                 ? const Color(0xFFE5F0FF)
@@ -291,7 +308,6 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
         children: [
           _buildTitle('성별을\n선택해주세요.'),
           _buildLabel('성별'),
-          const SizedBox(height: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -348,87 +364,96 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
   Widget _buildMotivateInputStep() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildTitle('리부트 오피스의\n지원동기를 적어주세요.'),
-        _buildLabel('자기소개 및 지원동기'),
-        TextField(
-          maxLines: 4,
-          maxLength: 200,
-          cursorHeight: 20,
-          controller: viewModel.textMotivateController,
-          style: FontSystem.KR16M,
-          decoration: InputDecoration(
-            hintText: "간단한 자기소개와 지원동기를 적어주세요",
-            hintStyle: const TextStyle(
-              color: Color(0xFF999999),
-              fontSize: 16,
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            filled: true,
-            fillColor: viewModel.textMotivateController.text.isNotEmpty
-                ? const Color(0xFFE5F0FF)
-                : Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(
-                color: Color(0xFFE5E5EC),
-                width: 1.0,
+      child: Stack(children: [
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTitle('리부트 오피스의\n지원동기를 적어주세요.'),
+              _buildLabel('자기소개 및 지원동기'),
+              TextField(
+                maxLines: 4,
+                maxLength: 200,
+                cursorHeight: 20,
+                controller: viewModel.textMotivateController,
+                style: FontSystem.KR16SB,
+                decoration: InputDecoration(
+                  hintText: "간단한 자기소개와 지원동기를 적어주세요",
+                  hintStyle: FontSystem.KR16M
+                      .copyWith(color: ColorSystem.grey.shade600),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  filled: true,
+                  fillColor: viewModel.textMotivateController.text.isNotEmpty
+                      ? const Color(0xFFE5F0FF)
+                      : Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFE5E5EC),
+                      width: 1.0,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFE5E5EC), // 활성 상태 테두리 색상
+                      width: 1.0, // 테두리 두께
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF0066ff), // 포커스 상태 테두리 색상 (예: 파란색)
+                      width: 1.0, // 포커스 상태 테두리 두께
+                    ),
+                  ),
+                ),
               ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(
-                color: Color(0xFFE5E5EC), // 활성 상태 테두리 색상
-                width: 1.0, // 테두리 두께
+              const SizedBox(
+                height: 18,
               ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(
-                color: Color(0xFF0066ff), // 포커스 상태 테두리 색상 (예: 파란색)
-                width: 1.0, // 포커스 상태 테두리 두께
-              ),
-            ),
+              _buildExample(),
+            ],
           ),
         ),
-        const SizedBox(
-          height: 28,
-        ),
-        _buildExample(),
-        const Spacer(),
-        Container(
-            width: double.infinity,
-            height: 60,
-            decoration: BoxDecoration(
-              color: viewModel.isMotivateButtonEnabled
-                  ? ColorSystem.blue.shade500
-                  : ColorSystem.grey.shade200,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: RoundedRectangleTextButton(
-              text: '이력서 제출하기',
-              textStyle: FontSystem.KR16B.copyWith(
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+              width: double.infinity,
+              height: 60,
+              decoration: BoxDecoration(
                 color: viewModel.isMotivateButtonEnabled
-                    ? ColorSystem.white
-                    : ColorSystem.grey.shade400,
+                    ? ColorSystem.blue.shade500
+                    : ColorSystem.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
               ),
-              padding: viewModel.isMotivateButtonEnabled
-                  ? const EdgeInsets.symmetric(vertical: 16)
-                  : const EdgeInsets.symmetric(vertical: 2),
-              onPressed: (viewModel.isMotivateButtonEnabled &&
-                      viewModel.isBirthButtonEnabled &&
-                      viewModel.isNameButtonEnabled &&
-                      viewModel.selectedGender != null)
-                  ? () {
-                      Get.to(
-                        () => const OnboardingLoadScreen(),
-                        transition: Transition.rightToLeft,
-                        duration: const Duration(milliseconds: 300),
-                      );
-                    }
-                  : null,
-            ))
+              child: RoundedRectangleTextButton(
+                text: '이력서 제출하기',
+                textStyle: FontSystem.KR16B.copyWith(
+                  color: viewModel.isMotivateButtonEnabled
+                      ? ColorSystem.white
+                      : ColorSystem.grey.shade400,
+                ),
+                padding: viewModel.isMotivateButtonEnabled
+                    ? const EdgeInsets.symmetric(vertical: 16)
+                    : const EdgeInsets.symmetric(vertical: 2),
+                onPressed: (viewModel.isMotivateButtonEnabled &&
+                        viewModel.isBirthButtonEnabled &&
+                        viewModel.isNameButtonEnabled &&
+                        viewModel.selectedGender != null)
+                    ? () {
+                        Get.to(
+                          () => const OnboardingLoadScreen(),
+                          transition: Transition.rightToLeft,
+                          duration: const Duration(milliseconds: 300),
+                        );
+                      }
+                    : null,
+              )),
+        )
       ]),
     );
   }
@@ -462,5 +487,28 @@ class OnboardingScreen extends BaseScreen<OnboardingViewModel> {
         ),
       ],
     );
+  }
+}
+
+class DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final text = newValue.text;
+
+    if (text.length >= 5 && text.length <= 6) {
+      return TextEditingValue(
+        text: '${text.substring(0, 4)}-${text.substring(4)}',
+        selection: TextSelection.collapsed(offset: text.length + 1),
+      );
+    } else if (text.length >= 8) {
+      return TextEditingValue(
+        text:
+            '${text.substring(0, 4)}-${text.substring(4, 6)}-${text.substring(6)}',
+        selection: TextSelection.collapsed(offset: text.length + 2),
+      );
+    }
+
+    return newValue;
   }
 }

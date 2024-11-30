@@ -26,8 +26,9 @@ class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
   @override
   Widget buildBody(BuildContext context) {
     return Obx(() => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: _buildDateHeader()),
+            _buildDateHeader(),
             Expanded(
               child: _buildTaskList(),
             ),
@@ -37,17 +38,10 @@ class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
 
   Widget _buildDateHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        decoration: BoxDecoration(
-          color: ColorSystem.grey.shade200,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          '2024년 11월 24일 일요일',
-          style: FontSystem.KR14R.copyWith(color: ColorSystem.grey.shade600),
-        ),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+      child: const Text(
+        '2024년 11월 30일 토요일',
+        style: FontSystem.KR20M,
       ),
     );
   }
@@ -76,7 +70,7 @@ class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
               ),
               Text(
                 task.chatType,
-                style: FontSystem.KR20B,
+                style: FontSystem.KR20SB,
               ),
               const SizedBox(
                 width: 8,
@@ -101,7 +95,7 @@ class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
                   : Container(
                       width: 1.5,
                       height: 400,
-                      color: ColorSystem.grey.shade600,
+                      color: ColorSystem.blue.shade300,
                     ),
             ),
             Column(
@@ -124,7 +118,7 @@ class StatisticsDetailScreen extends BaseScreen<StatisticsDetailViewModel> {
                   width: 229,
                   child: Text(
                     task.content,
-                    style: FontSystem.KR16B,
+                    style: FontSystem.KR16SB,
                   ),
                 ),
               ],
