@@ -33,6 +33,8 @@ class ChattingRoomListScreen extends BaseScreen<ChattingRoomListViewModel> {
   Widget buildBody(BuildContext context) {
     return Obx(
       () => RefreshIndicator(
+        backgroundColor: Colors.white,
+        color: ColorSystem.blue,
         onRefresh: () async {
           await viewModel.fetchChattingRoomList();
         },

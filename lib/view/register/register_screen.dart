@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
+import 'package:rebootOffice/utility/functions/log_util.dart';
 import 'package:rebootOffice/utility/functions/on_boarding_util.dart';
 import 'package:rebootOffice/utility/static/app_routes.dart';
 import 'package:rebootOffice/utility/system/color_system.dart';
@@ -241,7 +242,7 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
               const SizedBox(height: 8),
               _buildLabel('선택하신 시간에 기상하셔서 기상 인증\n미션을 진행하게 됩니다'),
               const SizedBox(
-                height: 16,
+                height: 24,
               ),
               const ScrollTimePicker(),
             ],
@@ -486,16 +487,17 @@ class RegisterScreen extends BaseScreen<RegisterViewModel> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: RoundedRectangleTextButton(
-                text: '리부트 오피스 시작하기',
-                textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white),
-                padding: viewModel.isSelectWorkPlace
-                    ? const EdgeInsets.symmetric(vertical: 16)
-                    : const EdgeInsets.symmetric(vertical: 2),
-                onPressed: () {
-                  completeOnboarding();
-                  viewModel.submitRegisterData();
-                  Get.toNamed(Routes.LOGIN);
-                }),
+              text: '리부트 오피스 시작하기',
+              textStyle: FontSystem.KR16B.copyWith(color: ColorSystem.white),
+              padding: viewModel.isSelectWorkPlace
+                  ? const EdgeInsets.symmetric(vertical: 16)
+                  : const EdgeInsets.symmetric(vertical: 2),
+              onPressed: () async {
+                await completeOnboarding();
+                await viewModel.submitRegisterData();
+                Get.offAllNamed(Routes.ROOT);
+              },
+            ),
           ),
         ],
       ),

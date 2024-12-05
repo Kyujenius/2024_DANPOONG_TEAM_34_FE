@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rebootOffice/model/home/daily_work_state.dart';
 import 'package:rebootOffice/model/home/user_state.dart';
 import 'package:rebootOffice/model/home/week_state.dart';
 import 'package:rebootOffice/repository/home/home_repository.dart';
 import 'package:rebootOffice/utility/functions/home_alrert_util.dart';
+import 'package:rebootOffice/view/home/widget/popup_onboarding_modal.dart';
 
 class HomeViewModel extends GetxController {
   /* ------------------------------------------------------ */
@@ -19,6 +21,8 @@ class HomeViewModel extends GetxController {
   late final _isBusinessCardExpanded = false.obs;
   late final _showBottomInfo = false.obs;
   final RxBool _showWelcomeCard = false.obs;
+  // week_calender 날짜 선택
+  final Rx<DateTime?> selectedDate = Rx<DateTime?>(DateTime.now());
 
   /* ------------------------------------------------------ */
   /* ----------------- Public Fields ---------------------- */
@@ -72,5 +76,31 @@ class HomeViewModel extends GetxController {
 
   Future<void> checkUnreadMessage() async {
     _showWelcomeCard.value = await SharedPrefsUtil.getHasUnreadMessage();
+  }
+
+  void updateSelectedDate(DateTime date) {
+    selectedDate.value = date;
+  }
+
+  // EndTime + 1 확인하는 함수
+  bool isNextDay() {
+    final workEndTime = weekState.workEndTime;
+    final now = DateTime.now();
+    return now.year > workEndTime.year ||
+        (now.year == workEndTime.year && now.month > workEndTime.month) ||
+        (now.year == workEndTime.year &&
+            now.month == workEndTime.month &&
+            now.day > workEndTime.day);
+  }
+
+  // 팝업 온보딩 보여주는 함수
+  void showBusinessCardPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const PopupOnboardingModal();
+      },
+    );
   }
 }
